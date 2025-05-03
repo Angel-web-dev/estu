@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima con Geolocalización</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #weather {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Consulta el Clima por Ubicación</h1>
+    <button onclick="getLocation()">Obtener Clima</button>
+    
+    <div id="weather"></div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(getWeather, showError);
+            } else {
+                document.getElementById('weather').innerText = "La geolocalización no está soportada en este navegador.";
+            }
+        }
+
+        function getWeather(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const url = `https://wttr.in/${lat},${lon}?format=%C+%t+%w`;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('weather').innerText = `Ubicación: Lat ${lat}, Lon ${lon}\nClima: ${data}`;
+                })
+                .catch(error => console.error('Error al obtener datos:', error));
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('weather').innerText = "Permiso denegado para acceder a la ubicación.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('weather').innerText = "Información de ubicación no disponible.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('weather').innerText = "Tiempo de espera agotado.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('weather').innerText = "Error desconocido.";
+                    break;
+            }
+        }
+    </script>
+
+</body>
+</html>
+

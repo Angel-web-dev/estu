@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imágenes de Perros - Dog API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        img {
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Imágenes Aleatorias de Perros</h1>
+    <button onclick="getDogImage()">Mostrar un Perro 🐶</button>
+    
+    <div id="dog-container">
+        <img id="dog-image" src="" alt="Imagen de perro">
+    </div>
+
+    <script>
+        function getDogImage() {
+            const url = 'https://dog.ceo/api/breeds/image/random';
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log (data);
+                    document.getElementById('dog-image').src = data.message;
+                })
+                .catch(error => console.error('Error al obtener imagen:', error));
+        }
+
+        // Cargar una imagen inicial al abrir la página
+        getDogImage();
+    </script>
+
+</body>
+</html>

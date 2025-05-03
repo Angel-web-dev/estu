@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor de Divisas 🌍💰</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        select, input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Convertidor de Divisas 💰</h1>
+    <select id="fromCurrency">
+        <option value="USD">USD - Dólar estadounidense</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="MXN">MXN - Peso mexicano</option>
+        <option value="GBP">GBP - Libra esterlina</option>
+        <option value="JPY">JPY - Yen japonés</option>
+    </select>
+
+    <input type="number" id="amount" placeholder="Cantidad" min="1">
+
+    <select id="toCurrency">
+        <option value="USD">USD - Dólar estadounidense</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="MXN">MXN - Peso mexicano</option>
+        <option value="GBP">GBP - Libra esterlina</option>
+        <option value="JPY">JPY - Yen japonés</option>
+    </select>
+
+    <button onclick="convertCurrency()">Convertir</button>
+
+    <div id="result"></div>
+
+    <script>
+        function convertCurrency() {
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            const amount = document.getElementById('amount').value;
+
+            const url = `https://api.exchangerate-api.com/v4/latest/${fromCurrency}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const rate = data.rates[toCurrency];
+                    if (rate) {
+                        const convertedAmount = (amount * rate).toFixed(2);
+                        document.getElementById('result').innerText = `🌍 ${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+                    } else {
+                        document.getElementById('result').innerText = "Error: Moneda no encontrada.";
+                    }
+                })
+                .catch(error => console.error('Error al obtener tasas de cambio:', error));
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéAPI - Selección de Pokémon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #pokemon-info {
+            margin-top: 20px;
+        }
+        img {
+            width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Selecciona un Pokémon</h1>
+    <select id="pokemon-select" onchange="getPokemon()">
+        <option value="">-- Elige un Pokémon --</option>
+    </select>
+
+    <div id="pokemon-info"></div>
+
+    <script>
+        const pokemonSelect = document.getElementById('pokemon-select');
+
+        // Obtener la lista completa de Pokémon
+        fetch('https://pokeapi.co/api/v2/pokemon?limit=809')  // Ajusta el límite según sea necesario
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach((pokemon, index) => {
+                    let option = document.createElement('option');
+                    option.value = pokemon.name;
+                    option.textContent = `${index + 1}. ${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}`;
+                    pokemonSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar la lista de Pokémon:', error));
+
+        function getPokemon() {
+            const pokemonName = pokemonSelect.value;
+            if (!pokemonName) return;
+
+            const url = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Pokémon no encontrado');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const pokemonInfo = `
+                        <h2>${data.name.toUpperCase()}</h2>
+                        <img src="${data.sprites.front_default}" alt="${data.name}">
+                        <p><strong>ID:</strong> ${data.id}</p>
+                        <p><strong>Altura:</strong> ${data.height / 10} m</p>
+                        <p><strong>Peso:</strong> ${data.weight / 10} kg</p>
+                        <p><strong>Tipo:</strong> ${data.types.map(t => t.type.name).join(', ')}</p>
+                    `;
+                    document.getElementById('pokemon-info').innerHTML = pokemonInfo;
+                })
+                .catch(error => {
+                    document.getElementById('pokemon-info').innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+                });
+        }
+    </script>
+
+</body>
+</html>
+

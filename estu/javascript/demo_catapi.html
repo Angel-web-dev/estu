@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos de Gatos con Traducción 🌍🐱</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #fact, #translated {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Datos Curiosos sobre Gatos 🐱</h1>
+    <button onclick="getCatFact()">Obtener un Dato</button>
+    
+    <div id="fact"></div>
+    <div id="translated"></div>
+
+    <script>
+        function getCatFact() {
+            fetch('https://catfact.ninja/fact')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('fact').innerText = `🐱 Dato en inglés: ${data.fact}`;
+                    translateText(data.fact);
+                })
+                .catch(error => console.error('Error al obtener dato:', error));
+        }
+
+        function translateText(text) {
+            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|es`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('translated').innerText = `🌍 Traducción: ${data.responseData.translatedText}`;
+                })
+                .catch(error => console.error('Error al traducir:', error));
+        }
+    </script>
+
+</body>
+</html>
