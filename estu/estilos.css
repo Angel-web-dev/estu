@@ -1,0 +1,14 @@
+div {
+    margin-top: 20px;
+    background-color: violet;
+
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: aquamarine;
+    font-size: 30px;
+    
+}
